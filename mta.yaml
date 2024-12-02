@@ -27,7 +27,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: Test-db
-      - name: Test-destination
+     
   - name: Test
     type: approuter.nodejs
     path: app/router
@@ -42,7 +42,7 @@ modules:
           name: srv-api # must be used in xs-app.json as well
           url: ~{srv-url}
           forwardAuthToken: true
-      - name: Test-destination
+     
       - name: Test-html5-runtime
 resources:
   - name: Test-db
@@ -50,30 +50,7 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
-  - name: Test-destination
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: destination
-      service-plan: lite
-      config:
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            existing_destinations_policy: update
-            destinations:
-              - Name: Test-srv-api
-                URL: ~{srv-api/srv-url}
-                Authentication: NoAuthentication
-                Type: HTTP
-                ProxyType: Internet
-                HTML5.ForwardAuthToken: true
-                HTML5.DynamicDestination: true
-              - Name: ui5
-                URL: https://ui5.sap.com
-                Authentication: NoAuthentication
-                Type: HTTP
-                ProxyType: Internet
-
+  
   - name: Test-html5-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
