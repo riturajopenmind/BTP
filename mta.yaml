@@ -1,7 +1,7 @@
 _schema-version: 3.3.0
 ID: Test
 version: 1.0.0
-description: "A simple CAP project."
+description: "A simple CAP project (Backend only)."
 parameters:
   enable-parallel-deployments: true
   deploy_mode: html5-repo
@@ -27,37 +27,10 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: Test-db
-     
-  - name: Test
-    type: approuter.nodejs
-    path: app/router
-    parameters:
-      keep-existing-routes: true
-      disk-quota: 256M
-      memory: 256M
-    requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api # must be used in xs-app.json as well
-          url: ~{srv-url}
-          forwardAuthToken: true
-     
-      - name: Test-html5-runtime
+
 resources:
   - name: Test-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
-  
-  - name: Test-html5-repo-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
-  - name: Test-html5-runtime
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-runtime
