@@ -28,15 +28,6 @@ modules:
     requires:
       - name: Test-db
       - name: Test-destination
-
-  - name: Test-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: Test-db
-
   - name: Test
     type: approuter.nodejs
     path: app/router
