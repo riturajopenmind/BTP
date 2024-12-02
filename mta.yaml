@@ -44,19 +44,6 @@ modules:
           forwardAuthToken: true
       - name: Test-destination
       - name: Test-html5-runtime
-
-  - name: Test-app-deployer
-    type: com.sap.application.content
-    path: gen
-    requires:
-      - name: Test-html5-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: app/
-      requires:
-
-
 resources:
   - name: Test-db
     type: com.sap.xs.hdi-container
