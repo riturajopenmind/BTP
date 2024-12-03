@@ -6,28 +6,35 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@cap-js/hana": "^1",
-    "@sap/cds": "^8.5.0",
-    "express": "^4"
+    "@sap-cloud-sdk/core": "^1.54.2",
+    "@sap-cloud-sdk/http-client": "^3.24.0",
+    "@sap-cloud-sdk/mail-client": "^3.22.2",
+    "@sap-cloud-sdk/util": "^3.14.0",
+    "@sap/cds-hana": "^2.0.0",
+    "@sap/hana-client": "^2.21.28",
+    "@sap/xssec": "^4",
+    "express": "^4",
+    "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@cap-js/cds-types": "^0.7.0",
     "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^8"
+    "@sap/cds": "^7",
+    "@sap/cds-dk": "^7",
+    "rimraf": "^5.0.5"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "undeploy": "cf undeploy Test --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "cds": {
     "requires": {
-      "db": {
-        "kind": "hana"
-      },
-      "destinations": true,
+      "auth": "mocked",
+      "db": "hana",
       "html5-repo": true
-    },
-    "sql": {
-      "native_hana_associations": false
     }
   }
 }
