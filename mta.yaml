@@ -20,7 +20,7 @@ modules:
 
   - name: Test-db-deployer
     type: hdb
-    path: gen/db
+    path: ..
     parameters:
       buildpack: nodejs_buildpack
     requires:
