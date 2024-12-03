@@ -1,5 +1,6 @@
 namespace my.namespace;
 //rituraj
+// kumar
 entity Products {
     key ID : Integer;
     name   : String(100);
