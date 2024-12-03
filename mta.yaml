@@ -4,27 +4,65 @@ version: 1.0.0
 description: "A simple CAP project."
 parameters:
   enable-parallel-deployments: true
-
+  deploy_mode: html5-repo
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
 modules:
   - name: Test-srv
     type: nodejs
-    path: ..
+    path: gen/srv
     parameters:
       buildpack: nodejs_buildpack
       readiness-health-check-type: http
       readiness-health-check-http-endpoint: /health
     build-parameters:
       builder: npm
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
     requires:
       - name: Test-db
 
+  - name: Test
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: Test-html5-runtime
+
   - name: Test-db-deployer
     type: hdb
-    path: ..
+    path: gen/db
     parameters:
       buildpack: nodejs_buildpack
     requires:
       - name: Test-db
+
+  - name: Testproject1
+    type: html5
+    path: app/project1
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
 
 resources:
   - name: Test-db
@@ -32,3 +70,15 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
+
+  - name: Test-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  - name: Test-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
