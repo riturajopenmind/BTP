@@ -8,7 +8,7 @@ parameters:
 modules:
   - name: Test-srv
     type: nodejs
-    path: gen/srv
+    path: ..
     parameters:
       buildpack: nodejs_buildpack
       readiness-health-check-type: http
